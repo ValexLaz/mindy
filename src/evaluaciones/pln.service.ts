@@ -3,8 +3,13 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
 export interface PlnResult {
-  label: '1 star' | '2 stars' | '3 stars' | '4 stars' | '5 stars';
-  score: number;
+  pred_label: 'negativo' | 'neutro' | 'positivo';
+  probabilidades: {
+    negativo: number;
+    neutro: number;
+    positivo: number;
+  };
+  texto: string;
 }
 
 @Injectable()
@@ -20,10 +25,7 @@ export class PlnService {
       );
       return response.data;
     } catch (error) {
-      console.error(
-        'Error al contactar el microservicio de PLN:',
-        error.message,
-      );
+      console.error('❌ Error al contactar el microservicio PLN:', error.message);
       return null;
     }
   }

@@ -118,76 +118,121 @@ async registrarRespuesta(data: RegistrarRespuestaDto) {
     return siguiente;
   }
 
-async calcularResultado(id_evaluacion: string) {
-  const evaluacion = await this.evaluacionRepo
-    .createQueryBuilder('evaluacion')
-    .leftJoinAndSelect('evaluacion.estudiante', 'estudiante')
-    .leftJoinAndSelect('evaluacion.matriz', 'matriz')
-    .leftJoinAndSelect('evaluacion.respuestas', 'respuestaEst')
-    .leftJoinAndSelect('respuestaEst.respuesta', 'respuestaBase')
-    .leftJoinAndSelect('respuestaEst.pregunta', 'pregunta')
-    .leftJoinAndSelect('pregunta.categoria', 'categoria')
-    .where('evaluacion.id_evaluacion = :id', { id: id_evaluacion })
-    .getOne();
+// =====================================
+  // 🔹 CALCULAR RESULTADO FINAL DE LA EVALUACIÓN
+  // =====================================
+  async calcularResultado(id_evaluacion: string) {
+    const evaluacion = await this.evaluacionRepo
+      .createQueryBuilder('evaluacion')
+      .leftJoinAndSelect('evaluacion.estudiante', 'estudiante')
+      .leftJoinAndSelect('evaluacion.matriz', 'matriz')
+      .leftJoinAndSelect('evaluacion.respuestas', 'respuestaEst')
+      .leftJoinAndSelect('respuestaEst.respuesta', 'respuestaBase')
+      .leftJoinAndSelect('respuestaEst.pregunta', 'pregunta')
+      .leftJoinAndSelect('pregunta.categoria', 'categoria')
+      .where('evaluacion.id_evaluacion = :id', { id: id_evaluacion })
+      .getOne();
 
-  if (!evaluacion) throw new NotFoundException('Evaluación no encontrada');
-  if (!evaluacion.estudiante) throw new NotFoundException('Estudiante asociado no encontrado en la evaluación'); // Validación extra
- //PLN
-  let puntajePln = 0;
+    if (!evaluacion) throw new NotFoundException('Evaluación no encontrada');
+    if (!evaluacion.estudiante)
+      throw new NotFoundException('Estudiante asociado no encontrado');
 
-  const respuestaAbierta = (evaluacion.respuestas || []).find(
-    (r) => r.respuesta_texto != null && r.respuesta_texto.trim() !== '',
-  );
+    // === 🔹 1️⃣ Calcular parámetros de ponderación PLN ===
+    const { bajo, medio, alto } = evaluacion.matriz.configuracion?.umbrales ?? {};
+    const Pmax = alto?.max ?? 50;
+    const bandas = [
+      (bajo?.max ?? 0) - (bajo?.min ?? 0),
+      (medio?.max ?? 0) - (medio?.min ?? 0),
+      (alto?.max ?? 0) - (alto?.min ?? 0),
+    ].filter((b) => b > 0);
+    const Bmin = Math.min(...bandas);
 
-  if (respuestaAbierta) {
-    console.log('Detectada respuesta abierta, llamando a PLN...');
-    const resultadoPln = await this.plnService.analizarSentimiento(
-      respuestaAbierta.respuesta_texto!,
+    const accuracy = 0.9875; // Precisión del modelo
+    const epsilon = 1 - accuracy;
+    const c = 0.5; // factor de seguridad
+    const lambda = c * (Bmin / Pmax) * (1 - epsilon);
+    const pesoPlnMax = Pmax * lambda;
+
+    console.log(`📐 λ=${lambda.toFixed(4)} | Bmin=${Bmin} | Pmax=${Pmax} | Peso PLN máx=${pesoPlnMax.toFixed(2)} pts`);
+
+    // === 🔹 2️⃣ Procesar todas las respuestas abiertas ===
+    const respuestasAbiertas = (evaluacion.respuestas || []).filter(
+      (r) => r.respuesta_texto && r.respuesta_texto.trim() !== '',
     );
 
-    if (resultadoPln) {
-      
-      const confianza = resultadoPln.score;
-      
-      if (resultadoPln.label === '1 star' && confianza > 0.6) {
-        puntajePln = 10;
-      } else if (resultadoPln.label === '2 stars' && confianza > 0.6) {
-        puntajePln = 7; 
-      } else if (resultadoPln.label === '3 stars' && confianza > 0.5) {
-        puntajePln = 3; 
+    let puntajePln = 0;
+    if (respuestasAbiertas.length > 0) {
+      console.log(`🧠 Detectadas ${respuestasAbiertas.length} respuestas abiertas. Analizando...`);
+
+      for (const r of respuestasAbiertas) {
+        try {
+          const resultadoPln = await this.plnService.analizarSentimiento(r.respuesta_texto!);
+          if (resultadoPln) {
+            const { pred_label, probabilidades } = resultadoPln;
+            const confianza = Math.max(
+              probabilidades.negativo,
+              probabilidades.neutro,
+              probabilidades.positivo,
+            );
+
+            let puntajeIndividual = 0;
+            if (pred_label === 'negativo') {
+              puntajeIndividual = confianza * pesoPlnMax;
+            } else if (pred_label === 'neutro') {
+              puntajeIndividual = confianza * pesoPlnMax * 0.5;
+            } else if (pred_label === 'positivo') {
+              puntajeIndividual = confianza * pesoPlnMax * 0.25;
+            }
+
+            puntajePln += puntajeIndividual;
+
+            console.log(
+              `🔹 [PLN] "${r.respuesta_texto}" → ${pred_label.toUpperCase()} (${confianza.toFixed(
+                3,
+              )}) = ${puntajeIndividual.toFixed(2)} pts`,
+            );
+          }
+        } catch (error) {
+          console.error(`❌ Error analizando PLN para "${r.respuesta_texto}":`, error.message);
+        }
       }
-      console.log(`Puntaje PLN calculado: ${puntajePln}`);
+
+      if (puntajePln > pesoPlnMax) {
+        console.log(`⚖️ Ajuste: PLN total (${puntajePln.toFixed(2)}) > máximo (${pesoPlnMax.toFixed(2)}). Normalizando...`);
+        puntajePln = pesoPlnMax;
+      }
+
+      puntajePln = parseFloat(puntajePln.toFixed(2));
+      console.log(`✅ Puntaje PLN final (ajustado): ${puntajePln}`);
+    } else {
+      console.log('ℹ️ No se encontraron respuestas abiertas para análisis PLN.');
     }
-  }
- 
 
-  //  puntaje de preguntas cerradas
-  const puntajeCerrado = (evaluacion.respuestas || []).reduce((sum, r) => {
-    const peso = parseFloat(String(r.respuesta?.peso ?? 0));
-    return sum + (isNaN(peso) ? 0 : peso);
-  }, 0);
+    // === 🔹 3️⃣ Puntaje de preguntas cerradas ===
+    const puntajeCerrado = (evaluacion.respuestas || []).reduce((sum, r) => {
+      const peso = parseFloat(String(r.respuesta?.peso ?? 0));
+      return sum + (isNaN(peso) ? 0 : peso);
+    }, 0);
 
-  
-  const puntajeFinal = puntajeCerrado + puntajePln;
+    const puntajeFinal = puntajeCerrado + puntajePln;
 
-  console.log(`Puntaje Cerrado: ${puntajeCerrado}, Puntaje PLN: ${puntajePln}, Puntaje Final: ${puntajeFinal}`);
+    console.log(`📊 Puntaje Cerrado: ${puntajeCerrado}, PLN: ${puntajePln}, Total: ${puntajeFinal}`);
 
-  // 5. Evaluar umbrales 
-  const config = evaluacion.matriz?.configuracion;
-  if (!config || !config.umbrales)
-    throw new NotFoundException('La matriz no tiene definidos los umbrales.');
+    // === 🔹 4️⃣ Evaluar nivel de riesgo ===
+    const config = evaluacion.matriz?.configuracion;
+    if (!config || !config.umbrales)
+      throw new NotFoundException('La matriz no tiene definidos los umbrales.');
 
-  const { bajo, medio, alto } = config.umbrales;
-  let nivel = 'bajo';
-  
-  if (puntajeFinal >= alto.min) nivel = 'alto';
-  else if (puntajeFinal >= medio.min) nivel = 'medio';
+    let nivel = 'bajo';
+    if (puntajeFinal >= alto.min) nivel = 'alto';
+    else if (puntajeFinal >= medio.min) nivel = 'medio';
 
-  
-  evaluacion.puntaje_total = puntajeFinal;
-  evaluacion.puntaje_pln = puntajePln; 
-  evaluacion.nivel_riesgo = nivel;
-  const savedEvaluation = await this.evaluacionRepo.save(evaluacion);
+    evaluacion.puntaje_total = puntajeFinal;
+    evaluacion.puntaje_pln = puntajePln;
+    evaluacion.nivel_riesgo = nivel;
+
+    const savedEvaluation = await this.evaluacionRepo.save(evaluacion);
+
   // Crear alerta 
     if (nivel === 'medio' || nivel === 'alto') {
       try {
@@ -275,4 +320,6 @@ async calcularResultado(id_evaluacion: string) {
       ],
     });
   }
+  
+
 }
