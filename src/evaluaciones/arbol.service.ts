@@ -203,28 +203,31 @@ if ((respuestasPorCat[categoriaActual.id_categoria] || 0) >= MAX_PREGUNTAS_POR_C
     return this._mapPregunta(siguientePregunta);
   }
   private async _finalizarOVerAbierta(preguntasRespondidas: string[]) {
-    console.log('Buscando pregunta abierta para finalizar...'); 
-    const preguntaAbierta = await this.preguntaRepo.findOne({
-    where: { is_open_ended: true },
-    relations: ['respuestas', 'categoria'], 
+  console.log('🔍 Buscando siguiente pregunta abierta pendiente...');
+
+  // Armamos el filtro base
+  const where: any = { is_open_ended: true };
+
+  // Si ya hay preguntas respondidas, excluimos esas
+  if (preguntasRespondidas.length > 0) {
+    where.id_pregunta = Not(In(preguntasRespondidas));
+  }
+
+  const preguntaAbierta = await this.preguntaRepo.findOne({
+    where,
+    relations: ['respuestas', 'categoria'],
+    order: { texto: 'ASC' }, // o 'orden' si tienes un campo de orden
   });
 
   if (!preguntaAbierta) {
-    console.warn(' No se encontró ninguna pregunta abierta en la BD. Evaluación completada.');
+    console.log('🏁 No hay más preguntas abiertas pendientes. Evaluación completada.');
     return { fin: true, mensaje: 'Evaluación completada' };
-    }
+  }
 
-  const yaRespondida = preguntasRespondidas.includes(preguntaAbierta.id_pregunta);
-
-  if (yaRespondida) {
-    console.log('🏁 Pregunta abierta ya respondida. Evaluación completada.');
-    return { fin: true, mensaje: 'Evaluación completada' };
-    } else {
-    console.log('🏁 Sirviendo pregunta abierta...');
-
-    return this._mapPregunta(preguntaAbierta);
-   }
+  console.log(`📝 Sirviendo pregunta abierta: ${preguntaAbierta.texto}`);
+  return this._mapPregunta(preguntaAbierta);
 }
+
   private _mapPregunta(p: Pregunta) {
     return {
       id_pregunta: p.id_pregunta,

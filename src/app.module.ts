@@ -11,6 +11,8 @@ import { RecomendacionesModule } from './recomendaciones/recomendaciones.module'
 import { RespuestasModule } from './respuestas/respuestas.module';
 import { RespuestaEstudianteModule } from './respuesta-estudiante/respuesta-estudiante.module';
 import { AlertasModule } from './alertas/alertas.module';
+import { ReportesModule } from './reportes/reportes.module';
+import { SeguimientoModule } from './seguimiento/seguimiento.module';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { AlertasModule } from './alertas/alertas.module';
     RespuestasModule,
     RespuestaEstudianteModule,
     AlertasModule,
+    ReportesModule,
+    SeguimientoModule,
   ],
 })
 export class AppModule {}

@@ -155,7 +155,7 @@ async registrarRespuesta(data: RegistrarRespuestaDto) {
 
     console.log(`📐 λ=${lambda.toFixed(4)} | Bmin=${Bmin} | Pmax=${Pmax} | Peso PLN máx=${pesoPlnMax.toFixed(2)} pts`);
 
-    // === 🔹 2️⃣ Procesar todas las respuestas abiertas ===
+    // === Procesar todas las respuestas abiertas ===
     const respuestasAbiertas = (evaluacion.respuestas || []).filter(
       (r) => r.respuesta_texto && r.respuesta_texto.trim() !== '',
     );
