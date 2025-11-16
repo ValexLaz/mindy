@@ -1,0 +1,80 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  width: 450px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pregunta {
+  font-weight: bold;
+  color: #555;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.close {
+  background: #c83535;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* separación más suave */
+  align-items: center; /* centra el botón */
+}
+
+.submitButton {
+  width: 100%;
+  background-color: #55c7a7;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.submitButton:hover {
+  background-color: #4ab393;
+}
+
+.linkButton {
+  margin-top: 10px;
+  padding: 12px 20px;
+  background-color: #12c48b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.linkButton:hover {
+  background-color: #0fa876;
+}

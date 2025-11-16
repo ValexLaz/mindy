@@ -1,17 +1,8 @@
 // src/api/axiosInstance.ts
 import axios from 'axios';
 
-const baseURL = '/';
-
-if (!baseURL) {
-  console.error(
-    'FATAL ERROR: VITE_API_BASE_URL is not defined in your .env file!',
-  );
-  // Optional: throw new Error('API base URL not configured');
-}
-
 const axiosInstance = axios.create({
-  baseURL: baseURL, 
+  baseURL: '/api', // 👈 ahora TODAS las llamadas irán a /api/...
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -21,15 +12,13 @@ const axiosInstance = axios.create({
 // Request Interceptor: Adds JWT token to headers
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken'); // Adjust key if needed
+    const token = localStorage.getItem('authToken'); // Ajusta la key si es otra
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
 // Response Interceptor: Handles common errors like 401
@@ -39,15 +28,15 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       console.error('Unauthorized (401). Token might be invalid or expired.');
       localStorage.removeItem('authToken');
-     
-       if (window.location.pathname !== '/login') {
-         window.location.href = '/login'; 
-       }
+
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     } else {
-       console.error(
+      console.error(
         'API Request Error:',
         error.response?.data?.message || error.message,
-       );
+      );
     }
     return Promise.reject(error);
   },

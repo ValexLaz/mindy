@@ -5,6 +5,7 @@ import { useSeguimiento } from "../../hooks/useSeguimiento";
 import CrearSeguimientoForm from "../../components/Seguimiento/CrearSeguimientoForm";
 import SeguimientoCard from "../../components/Seguimiento/SeguimientoCard";
 import NotasForm from "../../components/Seguimiento/NotasForm";
+import styles from "./CaseDetailsPage.module.css";
 
 export default function CaseDetailsPage() {
   const { id_alerta } = useParams();
@@ -17,6 +18,7 @@ export default function CaseDetailsPage() {
 
   return (
     <Layout>
+  <div className={styles.container}>
       <h1>Detalles del Caso</h1>
 
       {loading && <p>Cargando...</p>}
@@ -34,7 +36,7 @@ export default function CaseDetailsPage() {
             }}
           />
 
-          <button onClick={async () => {
+          <button className={styles.closeButton} onClick={async () => {
             await cerrar(seguimiento.id_seguimiento);
             load();
           }}>
@@ -46,7 +48,7 @@ export default function CaseDetailsPage() {
       {/* SI NO EXISTE, MOSTRAR FORM */}
       {!seguimiento && (
         <>
-          <button onClick={() => setShowForm(!showForm)}>
+          <button className={styles.createButton} onClick={() => setShowForm(!showForm)}>
             Crear seguimiento
           </button>
 
@@ -61,6 +63,7 @@ export default function CaseDetailsPage() {
           )}
         </>
       )}
-    </Layout>
+     </div>
+</Layout>
   );
 }

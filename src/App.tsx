@@ -6,6 +6,13 @@ import DashboardPage from './pages/DashboardPage';
 import { useAuth } from './hooks/useAuth';
 import ReportsPage from './pages/ReportsPage';
 import CaseDetailsPage from './pages/CaseDetailsPage/CaseDetailsPage';
+import PublicacionesPage from './pages/PublicacionesPages/PublicacionesPage';
+import CrearPublicacionPage from './pages/PublicacionesPages/CrearPublicacionPage';
+import EditarPublicacionPage from './pages/PublicacionesPages/EditarPublicacionPage';
+import ConfiguracionPreguntasPage from './pages/Preguntas/ConfiguracionPreguntasPage';
+import PreguntasListPage from "./pages/Preguntas/PreguntasListPage";
+import MatricesPage from './pages/Matrices/MatricesPage';
+import VerMatrizPage from './pages/Matrices/VerMatrizPage';
 
 
 // --- Componente Helper para Rutas Protegidas ---
@@ -48,23 +55,46 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/preguntas"
+        element={
+          <ProtectedRoute>
+            <ConfiguracionPreguntasPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/preguntas/listado"
+        element={
+          <ProtectedRoute>
+            <PreguntasListPage />
+          </ProtectedRoute>
+        }
+      />
+
+
       <Route path="/seguimiento/:id_alerta" element={
-  <ProtectedRoute><CaseDetailsPage /></ProtectedRoute>
-} />
-
-
-
+        <ProtectedRoute><CaseDetailsPage /></ProtectedRoute>
+      } />
 
       {/* Puedes añadir otras rutas protegidas aquí más tarde */}
 
       {/* --- Ruta Raíz ("/") --- */}
+      <Route path="/reportes" element={<ReportsPage />} />
+       <Route path="/publicaciones" element={<PublicacionesPage />} />
+      <Route path="/publicaciones/crear" element={<CrearPublicacionPage />} />
+      <Route path="/publicaciones/editar/:id_publicacion" element={<EditarPublicacionPage />} />
       <Route
         path="/"
         element={
           isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
         }
       />
-       <Route path="/reportes" element={<ReportsPage />} />
+       <Route path="/matrices" element={<MatricesPage />} />
+<Route path="/matrices/:id" element={<VerMatrizPage />} />
+
+
+
 
       {/* --- Ruta Catch-all (404 Not Found) --- */}
       <Route path="*" element={

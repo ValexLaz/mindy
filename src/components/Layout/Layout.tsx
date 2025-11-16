@@ -49,7 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
             <li>
               <NavLink
-                to="/contenido"
+                to="/publicaciones"
                 className={({ isActive }) => (isActive ? styles.activeLink : '')}
               >
                 📝 Contenido
@@ -67,7 +67,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
             <li>
               <NavLink
-                to="/configuracion"
+                to="/preguntas"
                 className={({ isActive }) => (isActive ? styles.activeLink : '')}
               >
                 ⚙️ Configuración

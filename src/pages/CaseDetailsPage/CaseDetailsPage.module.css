@@ -195,3 +195,19 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+.createButton {
+  width: 100%;
+  padding: 12px 24px;
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  border: none;
+  font-weight: 600;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.createButton:hover {
+  transform: translateY(-2px);
+}

@@ -1,5 +1,8 @@
+// src/api/reportesService.ts
+import axiosInstance from "./axiosInstance";
+
 export interface ResumenGeneralItem {
-  nivel: string;        // "Bajo" | "Moderado" | "Alto"
+  nivel: string;
   cantidad: string | number;
 }
 
@@ -9,101 +12,64 @@ export interface FactorItem {
 }
 
 export interface EvolucionItem {
-  mes: string;          // "YYYY-MM"
+  mes: string;
   promedio: string | number;
 }
 
 export interface FiltrosReportes {
   carrera?: string;
-  semestre?: string;
-  fechaInicio?: string; // "YYYY-MM-DD"
-  fechaFin?: string;    // "YYYY-MM-DD"
+  semestre?: string | number;
+  fechaInicio?: string;
+  fechaFin?: string;
 }
+
 export interface OpcionesFiltros {
   carreras: string[];
   semestres: (string | number)[];
 }
 
-export async function getOpcionesFiltros(token?: string): Promise<OpcionesFiltros> {
-  const res = await fetch('/reportes/filtros', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  });
-  if (!res.ok) throw new Error(`Error ${res.status} al obtener opciones de filtros`);
-  return res.json();
+// Headers automáticos gracias al axiosInstance
+// NO necesitas token aquí
+// axiosInstance ya lo agrega
+
+// 🔹 Opciones de Filtros
+export async function getOpcionesFiltros(): Promise<OpcionesFiltros> {
+  const res = await axiosInstance.get('/reportes/filtros');
+  return res.data;
 }
 
-
-const jsonHeaders = (token?: string) => ({
-  'Content-Type': 'application/json',
-  ...(token ? { Authorization: `Bearer ${token}` } : {}),
-});
-
-/**
- * 🔹 Reporte general por nivel de riesgo
- */
+// 🔹 Resumen General
 export async function getResumenGeneral(
-  token?: string,
   filtros?: FiltrosReportes
 ): Promise<ResumenGeneralItem[]> {
-  const params = new URLSearchParams();
-  if (filtros?.carrera) params.set('carrera', filtros.carrera);
-  if (filtros?.semestre) params.set('semestre', filtros.semestre);
-  if (filtros?.fechaInicio) params.set('fechaInicio', filtros.fechaInicio);
-  if (filtros?.fechaFin) params.set('fechaFin', filtros.fechaFin);
 
-  const res = await fetch(`/reportes/general?${params.toString()}`, {
-    method: 'GET',
-    headers: jsonHeaders(token),
+  const res = await axiosInstance.get('/reportes/general', {
+    params: filtros,
   });
 
-  if (!res.ok) throw new Error(`Error ${res.status} al obtener resumen general`);
-  return res.json();
+  return res.data;
 }
 
-/**
- * 🔹 Factores más frecuentes (Top 10)
- */
+// 🔹 Factores Frecuentes
 export async function getFactoresFrecuentes(
-  token?: string,
   filtros?: FiltrosReportes
 ): Promise<FactorItem[]> {
-  const params = new URLSearchParams();
-  if (filtros?.carrera) params.set('carrera', filtros.carrera);
-  if (filtros?.semestre) params.set('semestre', filtros.semestre);
-  if (filtros?.fechaInicio) params.set('fechaInicio', filtros.fechaInicio);
-  if (filtros?.fechaFin) params.set('fechaFin', filtros.fechaFin);
 
-  const res = await fetch(`/reportes/factores?${params.toString()}`, {
-    method: 'GET',
-    headers: jsonHeaders(token),
+  const res = await axiosInstance.get('/reportes/factores', {
+    params: filtros,
   });
 
-  if (!res.ok) throw new Error(`Error ${res.status} al obtener factores`);
-  return res.json();
+  return res.data;
 }
 
-/**
- * 🔹 Evolución de riesgo (promedio mensual)
- */
+// 🔹 Evolución mensual de riesgo
 export async function getEvolucion(
-  token?: string,
   filtros?: FiltrosReportes
 ): Promise<EvolucionItem[]> {
-  const params = new URLSearchParams();
-  if (filtros?.carrera) params.set('carrera', filtros.carrera);
-  if (filtros?.semestre) params.set('semestre', filtros.semestre);
-  if (filtros?.fechaInicio) params.set('fechaInicio', filtros.fechaInicio);
-  if (filtros?.fechaFin) params.set('fechaFin', filtros.fechaFin);
 
-  const res = await fetch(`/reportes/evolucion?${params.toString()}`, {
-    method: 'GET',
-    headers: jsonHeaders(token),
+  const res = await axiosInstance.get('/reportes/evolucion', {
+    params: filtros,
   });
 
-  if (!res.ok) throw new Error(`Error ${res.status} al obtener evolución`);
-  return res.json();
+  return res.data;
 }

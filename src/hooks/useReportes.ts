@@ -27,7 +27,7 @@ export function useReportes() {
 
   const cargarOpciones = useCallback(async () => {
     try {
-      const data = await getOpcionesFiltros(token);
+const data = await getOpcionesFiltros();
       setOpciones(data);
     } catch (err) {
       console.error('Error cargando filtros:', err);
@@ -43,10 +43,11 @@ export function useReportes() {
     setError(null);
     try {
       const [r, f, e] = await Promise.all([
-        getResumenGeneral(token, filtros),
-        getFactoresFrecuentes(token, filtros),
-        getEvolucion(token, filtros),
-      ]);
+  getResumenGeneral(filtros),
+  getFactoresFrecuentes(filtros),
+  getEvolucion(filtros),
+]);
+
 
       // 🔸 Convertir strings numéricos + excluir categoría "General"
       setResumen(
