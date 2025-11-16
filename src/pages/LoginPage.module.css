@@ -1,0 +1,145 @@
+/* src/pages/LoginPage.module.css */
+
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Full viewport height */
+  background-color: #f0f4f8; /* Light grey-blue background */
+}
+
+.loginBox {
+  background-color: white;
+  padding: 40px 35px; /* Slightly more horizontal padding */
+  border-radius: 10px; /* Slightly more rounded corners */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
+  text-align: center;
+  max-width: 420px; /* Slightly wider */
+  width: 90%;
+}
+
+.logo {
+  width: 65px; /* Adjusted size */
+  height: 65px;
+  margin-bottom: 15px;
+  /* If using SVG, you can set fill color */
+  /* color: #4ECDC4; */
+}
+
+.loginBox h2 {
+  color: #343a40; /* Darker heading */
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.loginBox p {
+  color: #6c757d; /* Lighter grey text */
+  margin-bottom: 30px; /* More space before form */
+  font-size: 0.9em;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+  text-align: left;
+  position: relative; /* Needed for positioning icons if you add them */
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 6px; /* Slightly more space */
+  color: #495057; /* Medium grey */
+  font-weight: 500;
+  font-size: 0.85em;
+}
+
+/* Optional: Icon styling if you add icons inside/beside input */
+/*
+.inputGroup .icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #adb5bd; // Light icon color
+}
+.inputGroup input {
+  padding-left: 40px; // Make space for the icon
+}
+*/
+
+.inputGroup input {
+  width: 100%;
+  padding: 12px 15px; /* Adjust padding if using icons */
+  border: 1px solid #ced4da; /* Lighter border */
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputGroup input:focus {
+ outline: none;
+ border-color: #4ECDC4; /* Primary color */
+ box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.15); /* Soft glow */
+}
+
+.loginButton {
+  width: 100%;
+  padding: 12px;
+  background-color: #4ECDC4; /* Primary color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.05em; /* Slightly larger text */
+  font-weight: 600; /* Bolder */
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.loginButton:hover {
+  background-color: #3aa8a0; /* Darker primary */
+  transform: translateY(-1px); /* Slight lift */
+}
+
+.loginButton:disabled {
+  background-color: #a0d8d3; /* Lighter/disabled color */
+  cursor: not-allowed;
+  transform: none;
+}
+
+.links {
+  margin-top: 25px; /* More space */
+  font-size: 0.85em;
+}
+
+.links a {
+  color: #4ECDC4;
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.2s ease;
+}
+
+.links a:hover {
+  color: #3aa8a0; /* Darker on hover */
+  text-decoration: underline;
+}
+
+.registerLink {
+  display: block;
+  margin-top: 15px; /* More space if register is separate */
+}
+
+.errorText {
+  color: #721c24; /* Dark red */
+  background-color: #f8d7da; /* Light red background */
+  border: 1px solid #f5c6cb; /* Red border */
+  border-radius: 5px;
+  padding: 10px; /* Padding around error text */
+  margin-bottom: 15px;
+  font-size: 0.85em;
+  text-align: left; /* Align error text left */
+}
+
+.footerText {
+    margin-top: 35px; /* More space before footer */
+    font-size: 0.8em; /* Slightly larger footer text */
+    color: #adb5bd; /* Lighter grey */
+}

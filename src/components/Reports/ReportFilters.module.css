@@ -1,0 +1,40 @@
+.filters {
+  background: #fff;
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  margin-bottom: 20px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.field label {
+  display: block;
+  font-size: .85rem;
+  color: #6c757d;
+  margin-bottom: 6px;
+}
+
+.field input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+}
+
+.actions button {
+  padding: 10px 12px;
+  border: 1px solid #4ECDC4;
+  background: #4ECDC4;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.actions button:hover {
+  opacity: .9;
+}

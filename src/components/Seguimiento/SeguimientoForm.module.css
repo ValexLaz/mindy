@@ -1,0 +1,86 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.label {
+  font-weight: 600;
+  color: #0f172a;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.textarea {
+  border: 1px solid #cbd5f5;
+  border-radius: 12px;
+  padding: 12px;
+  min-height: 140px;
+  resize: vertical;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.helper {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 0.85rem;
+}
+
+.primaryButton,
+.secondaryButton {
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.primaryButton {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.primaryButton:not(:disabled):hover,
+.secondaryButton:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.secondaryButton {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.counter {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}

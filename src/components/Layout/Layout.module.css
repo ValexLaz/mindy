@@ -1,0 +1,159 @@
+/* src/components/Layout/Layout.module.css */
+
+.layoutContainer {
+  display: flex;
+  min-height: 100vh; /* Ensure layout takes full viewport height */
+}
+
+/* --- Sidebar Styles --- */
+.sidebar {
+  width: 240px; /* Fixed width for the sidebar */
+  background-color: #ffffff; /* White background */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05); /* Subtle shadow on the right */
+  display: flex;
+  flex-direction: column;
+  position: fixed; /* Keep sidebar fixed while content scrolls */
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100; /* Ensure sidebar stays on top */
+}
+
+.sidebarHeader {
+  padding: 20px 15px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e9ecef; /* Light separator */
+}
+
+.sidebarLogo {
+  width: 30px; /* Adjust size */
+  height: 30px;
+  margin-right: 10px;
+  color: #4ECDC4; /* Your primary color */
+}
+
+.sidebarHeader span {
+  font-weight: 600;
+  font-size: 1.1em;
+  color: #333;
+}
+
+.sidebarNav {
+  flex-grow: 1; /* Take remaining vertical space */
+  padding-top: 20px;
+}
+
+.sidebarNav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebarNav li a {
+  display: block;
+  padding: 12px 20px;
+  color: #555; /* Medium grey text */
+  text-decoration: none;
+  font-size: 0.95em;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-left: 3px solid transparent; /* Indicator for active link */
+}
+
+.sidebarNav li a:hover {
+  background-color: #f0f4f8; /* Light background on hover */
+  color: #333; /* Darker text on hover */
+}
+
+/* Style for the active link (you'll need React Router's NavLink for this) */
+.sidebarNav li a.active { /* Add 'active' class via NavLink */
+  background-color: #eaf6f6; /* Light primary color background */
+  color: #4ECDC4; /* Primary color text */
+  font-weight: 600;
+  border-left-color: #4ECDC4; /* Primary color indicator */
+}
+
+
+.sidebarFooter {
+  padding: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.logoutButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #f8d7da; /* Light red */
+  color: #721c24; /* Dark red */
+  border: 1px solid #f5c6cb; /* Red border */
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left; /* Align text left */
+  transition: background-color 0.2s ease;
+}
+.logoutButton:hover {
+  background-color: #f5c6cb;
+}
+
+
+/* --- Main Content Area Styles --- */
+.mainContent {
+  flex-grow: 1; /* Take remaining horizontal space */
+  margin-left: 240px; /* Offset by sidebar width */
+  background-color: #f0f4f8; /* Light grey background for content area */
+  padding: 0; /* Padding will be added by inner elements if needed */
+  display: flex;
+  flex-direction: column; /* Stack header and page content vertically */
+}
+
+.mainHeader {
+  background-color: #ffffff;
+  padding: 15px 25px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between; /* Space out breadcrumbs/title and user info */
+  align-items: center;
+  position: sticky; /* Keep header sticky at the top */
+  top: 0;
+  z-index: 90; /* Below sidebar */
+}
+
+.userInfo {
+ display: flex;
+ align-items: center;
+}
+
+.userName {
+  margin-right: 15px;
+  color: #555;
+  font-weight: 500;
+}
+
+.userAvatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #4ECDC4; /* Primary color */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.1em; /* Adjust based on icon/letter */
+}
+
+
+.pageContent {
+  flex-grow: 1; /* Take remaining vertical space */
+  padding: 25px; /* Add padding around the actual page content */
+  /* This is where the children passed to Layout will render */
+}
+/* Enlace activo del menú lateral */
+.activeLink {
+  color: #4ECDC4;
+  font-weight: 600;
+  background-color: #e6fffa;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: inline-block;
+}

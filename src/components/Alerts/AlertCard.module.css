@@ -1,0 +1,123 @@
+/* src/components/Alerts/AlertCard.module.css */
+
+.alertCard {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Softer shadow */
+  margin-bottom: 16px;
+  overflow: hidden;
+  border-left: 5px solid #B0BEC5; /* Default border color (grey) */
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.alertCard:hover {
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly larger shadow on hover */
+}
+
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px; /* Slightly less padding */
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.pseudonimo {
+  font-weight: 600;
+  color: #343a40; /* Darker grey */
+  font-size: 0.95em;
+}
+
+.riskBadge {
+  padding: 3px 10px; /* Slightly smaller padding */
+  border-radius: 12px;
+  color: white;
+  font-size: 0.75em; /* Smaller font */
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cardBody {
+  padding: 15px;
+  font-size: 0.9em;
+  color: #495057; /* Medium grey */
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between; /* Space out items */
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+  gap: 10px; /* Space between items */
+  margin-bottom: 10px;
+  color: #6c757d; /* Lighter grey for secondary info */
+  font-size: 0.85em;
+}
+
+.infoRow span {
+ white-space: nowrap; /* Prevent wrapping within an item */
+}
+
+
+.factorsRow {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #e0e0e0; /* Dashed separator */
+  font-size: 0.85em;
+  color: #495057;
+}
+
+.factorsRow strong {
+  color: #343a40;
+  margin-right: 5px;
+}
+
+.factorsRow span {
+  color: #6c757d;
+}
+
+
+.cardFooter {
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  text-align: right;
+  border-top: 1px solid #e9ecef;
+}
+
+.detailsButton {
+  padding: 6px 14px; /* Slightly smaller button */
+  background-color: #4ECDC4; /* Primary color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.85em; /* Smaller font */
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.detailsButton:hover {
+  background-color: #3aa8a0; /* Darker primary */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Button for marking as viewed */
+.markViewedButton {
+  margin-left: 10px;
+  padding: 6px 12px;
+  background-color: #ffc107; /* Yellow */
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.8em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.markViewedButton:hover {
+  background-color: #e0a800; /* Darker yellow */
+}
